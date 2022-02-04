@@ -36,10 +36,10 @@ info:
       - "\uD83C\uDF10 \u00BB %player_ip%"
       - "(Select what you want to do)"
     locked-message:
-      - "\u2757\uFE0F TelegramLogin - Blocked! \u2757\uFE0F"
+      - "\u2757\uFE0F TelegramLogin - Locked! \u2757\uFE0F"
       - "Press 'Unlock' before entering."
     locked-message-by-command:
-      - "\u2757\uFE0F TelegramLogin - Blocked! \u2757\uFE0F"
+      - "\u2757\uFE0F TelegramLogin - Locked! \u2757\uFE0F"
       - "Type /unlock to unlock it"
     unlocked-message: "\U0001f513 TelegramLogin - Unlocked!"
     chat-id-confirmed:

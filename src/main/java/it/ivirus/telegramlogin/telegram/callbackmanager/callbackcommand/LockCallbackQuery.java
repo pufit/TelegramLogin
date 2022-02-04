@@ -29,7 +29,8 @@ public class LockCallbackQuery extends AbstractUpdate {
             if (player != null) {
                 if (playerData.getPlayerInLogin().containsKey(uuid)){
                     playerData.getPlayerInLogin().remove(uuid);
-                    Util.sendPluginMessage(player, PluginMessageAction.REMOVE);
+                    if (plugin.isBungeeEnabled())
+                        Util.sendPluginMessage(player, PluginMessageAction.REMOVE);
                 }
                 Bukkit.getScheduler().runTaskLater(plugin, () -> player.kickPlayer(LangConstants.INGAME_KICK_ACCOUNT_LOCKED.getFormattedString()),1);
             }
