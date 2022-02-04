@@ -1,11 +1,8 @@
 package it.ivirus.telegramlogin.telegram.callbackmanager.callbackcommand;
 
-import it.ivirus.telegramlogin.util.MessageFactory;
+import it.ivirus.telegramlogin.util.*;
 import it.ivirus.telegramlogin.telegram.TelegramBot;
 import it.ivirus.telegramlogin.telegram.callbackmanager.AbstractUpdate;
-import it.ivirus.telegramlogin.util.LangConstants;
-import it.ivirus.telegramlogin.util.PluginMessageAction;
-import it.ivirus.telegramlogin.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -21,7 +18,6 @@ public class LoginConfirmCallbackQuery extends AbstractUpdate {
         UUID uuid = UUID.fromString(playerUUID);
         Player player = Bukkit.getPlayer(uuid);
         String chatId = args[2];
-        playerData.getPlayerInLogin().remove(uuid);
         int messageId = update.getCallbackQuery().getMessage().getMessageId();
         DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
         try {
@@ -32,8 +28,11 @@ public class LoginConfirmCallbackQuery extends AbstractUpdate {
             }
             if (plugin.isBungeeEnabled())
                 Util.sendPluginMessage(player, PluginMessageAction.REMOVE);
-            playerData.getPlayerCache().get(uuid).setPlayerIp(player.getAddress().getHostString());
+            //playerData.getPlayerCache().get(uuid).setPlayerIp(player.getAddress().getHostString());
             bot.execute((MessageFactory.simpleMessage(chatId, LangConstants.TG_LOGIN_EXECUTED.getString())));
+            TelegramPlayer telegramPlayer = playerData.getPlayerInLogin().get(player.getUniqueId());
+            playerData.getPlayerCache().put(player.getUniqueId(), telegramPlayer);
+            playerData.getPlayerInLogin().remove(uuid);
             player.sendMessage(LangConstants.INGAME_LOGIN_EXECUTED.getFormattedString());
         } catch (TelegramApiException e) {
             e.printStackTrace();
