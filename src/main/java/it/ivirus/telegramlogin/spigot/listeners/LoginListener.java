@@ -73,7 +73,7 @@ public class LoginListener implements Listener {
                 if (plugin.isLoginSessionEnabled()) {
                     telegramPlayer.setPlayerIp(player.getAddress().getHostString());
                 }
-                playerData.getPlayerCache().put(player.getUniqueId(), telegramPlayer);
+                //playerData.getPlayerCache().put(player.getUniqueId(), telegramPlayer);
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     if (plugin.isBungeeEnabled())
                         Util.sendPluginMessage(player, PluginMessageAction.ADD);
