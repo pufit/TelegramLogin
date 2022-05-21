@@ -26,11 +26,24 @@ public class SQLite extends SqlManager {
     }
 
     @Override
-    public void createTables() throws SQLException {
-        PreparedStatement data = getConnection().prepareStatement("create TABLE if not exists " + TABLE_PLAYERS + " " +
-                "(AccountId INTEGER PRIMARY KEY AUTOINCREMENT, PlayerUUID VARCHAR(100), PlayerName VARCHAR(100), ChatID VARCHAR(100), Locked BOOLEAN NOT NULL," +
-                "RegistrationDate DATETIME NOT NULL)");
-        data.executeUpdate();
+    public Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connection = getJdbcUrl();
+        }
+        return this.connection;
+    }
+
+    @Override
+    public void createTables() {
+        try (Connection connection = getConnection();
+             PreparedStatement data = connection.prepareStatement("create TABLE if not exists " + TABLE_PLAYERS + " " +
+                     "(AccountId INTEGER PRIMARY KEY AUTOINCREMENT, PlayerUUID VARCHAR(100), PlayerName VARCHAR(100), ChatID VARCHAR(100), Locked BOOLEAN NOT NULL," +
+                     "RegistrationDate DATETIME NOT NULL)")) {
+
+            data.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

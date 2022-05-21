@@ -32,6 +32,7 @@ public enum LangConstants {
     TG_INVALID_VALUE("errors.telegram.invalid-value"),
     TG_UNLOCK_USAGE("errors.telegram.unlock-usage"),
     TG_LOCK_USAGE("errors.telegram.lock-usage"),
+    TG_CONFIRM_USAGE("errors.telegram.confirm-usage"),
     INGAME_ACCOUNT_LIST("info.in-game.account-list.message"),
     INGAME_ACCOUNT_LIST_SINTAX("info.in-game.account-list.sintax"),
     INGAME_ACCOUNT_LIST_LOCKED("info.in-game.account-list.locked"),

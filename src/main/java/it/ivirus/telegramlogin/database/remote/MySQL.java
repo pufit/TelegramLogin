@@ -34,7 +34,6 @@ public class MySQL extends ConnectionPoolManager {
                         "?autoReconnect=true&failOverReadOnly=false&maxReconnects=10&useSSL=" +
                         this.ssl
         );
-        //getHikariConfig().setDriverClassName("com.mysql.jdbc.Driver");
         getHikariConfig().setUsername(this.username);
         getHikariConfig().setPassword(this.password);
         setDataSource(new HikariDataSource(getHikariConfig()));
@@ -43,11 +42,30 @@ public class MySQL extends ConnectionPoolManager {
     }
 
     @Override
-    public void createTables() throws SQLException {
-        PreparedStatement data = getConnection().prepareStatement("create TABLE if not exists " + TABLE_PLAYERS + " " +
-                "(AccountId INT NOT NULL AUTO_INCREMENT, PlayerUUID VARCHAR(100), PlayerName VARCHAR(100), ChatID VARCHAR(100), Locked BOOLEAN NOT NULL," +
-                "RegistrationDate DATETIME NOT NULL, PRIMARY KEY(AccountId))");
-        data.executeUpdate();
+    public synchronized Connection getConnection() throws SQLException {
+        if (this.getDataSource() == null) {
+            throw new SQLException("Unable to get a connection from the pool. (hikari is null)");
+        }
+
+        Connection connection = this.getDataSource().getConnection();
+        if (connection == null) {
+            throw new SQLException("Unable to get a connection from the pool. (getConnection returned null)");
+        }
+
+        return connection;
+    }
+
+    @Override
+    public void createTables() {
+        try (Connection connection = getConnection();
+             PreparedStatement data = connection.prepareStatement("create TABLE if not exists " + TABLE_PLAYERS + " " +
+                     "(AccountId INT NOT NULL AUTO_INCREMENT, PlayerUUID VARCHAR(100), PlayerName VARCHAR(100), ChatID VARCHAR(100), Locked BOOLEAN NOT NULL," +
+                     "RegistrationDate DATETIME NOT NULL, PRIMARY KEY(AccountId))")) {
+
+            data.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

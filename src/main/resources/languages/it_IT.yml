@@ -22,6 +22,7 @@ errors:
     invalid-value: "Valore non valido"
     unlock-usage: "Usa: /unlock accountId"
     lock-usage: "Usa: /lock accountId"
+    confirm-usage: "Devi rispondere al messaggio della richiesta di login o digitare /confirm accountId"
 
 info:
   telegram: #--------- Bot Messages -------------------------------------------------------------------------

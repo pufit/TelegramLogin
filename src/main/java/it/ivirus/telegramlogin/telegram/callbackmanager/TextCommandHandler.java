@@ -22,6 +22,7 @@ public class TextCommandHandler {
         registerCommand("/lock", new LockTextCommand());
         registerCommand("/accountlist", new AccountListTextCommand());
         registerCommand("/unlock", new UnlockTextCommand());
+        registerCommand("/confirm", new ConfirmTextCommand());
     }
 
     @Getter(lazy = true)

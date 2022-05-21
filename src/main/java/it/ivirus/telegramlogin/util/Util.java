@@ -15,12 +15,6 @@ public class Util {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
-    public static void loadListeners(TelegramLogin plugin, Listener... listeners) {
-        for (Listener l : listeners) {
-            Bukkit.getPluginManager().registerEvents(l, plugin);
-        }
-    }
-
     public static void sendPluginMessage(Player player, PluginMessageAction action) {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);

@@ -43,7 +43,8 @@ public class LoginListener implements Listener {
                     Util.sendPluginMessage(player, PluginMessageAction.ADD);
             }, 3);
             try {
-                bot.execute(MessageFactory.loginRequest(telegramPlayer.getPlayerUUID(), telegramPlayer.getChatID(), player.getName(), player.getAddress().getHostString()));
+                bot.execute(MessageFactory.loginRequest(telegramPlayer.getPlayerUUID(),
+                        telegramPlayer.getChatID(), player.getName(), player.getAddress().getHostString(), telegramPlayer.getAccountId()));
                 player.sendMessage(LangConstants.INGAME_WAIT_FOR_LOGIN_CONFIRM.getFormattedString());
             } catch (TelegramApiException e) {
                 e.printStackTrace();
@@ -79,7 +80,7 @@ public class LoginListener implements Listener {
                 }, 3);
                 playerData.getPlayerInLogin().put(player.getUniqueId(), telegramPlayer);
                 try {
-                    bot.execute(MessageFactory.loginRequest(telegramPlayer.getPlayerUUID(), telegramPlayer.getChatID(), player.getName(), player.getAddress().getHostString()));
+                    bot.execute(MessageFactory.loginRequest(telegramPlayer.getPlayerUUID(), telegramPlayer.getChatID(), player.getName(), player.getAddress().getHostString(), telegramPlayer.getAccountId()));
                     player.sendMessage(LangConstants.INGAME_WAIT_FOR_LOGIN_CONFIRM.getFormattedString());
                 } catch (TelegramApiException e) {
                     e.printStackTrace();

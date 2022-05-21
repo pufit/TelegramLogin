@@ -78,11 +78,10 @@ public class TelegramLogin extends JavaPlugin {
         int port = getConfig().getInt("MySQL.Port");
         boolean ssl = getConfig().getBoolean("MySQL.SSL");
         sql = getConfig().getBoolean("MySQL.Enable") ? new MySQL(this, database, username, password, host, port, ssl) : new SQLite(this);
-        sql.setup();
         try {
-            sql.createTables();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+            sql.setup();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 

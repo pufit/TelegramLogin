@@ -27,10 +27,10 @@ public class MessageFactory {
         return sendMessage;
     }
 
-    public static SendMessage loginRequest(String playerUUID, String chatId, String playerName, String ipAddress) {
+    public static SendMessage loginRequest(String playerUUID, String chatId, String playerName, String ipAddress, int accountId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
-        sendMessage.setText(LangConstants.TG_LOGIN_MESSAGE.getString()
+        sendMessage.setText("(" + accountId + ")" + LangConstants.TG_LOGIN_MESSAGE.getString()
                 .replaceAll("%player_name%", playerName)
                 .replaceAll("%player_ip%", ipAddress)
         );

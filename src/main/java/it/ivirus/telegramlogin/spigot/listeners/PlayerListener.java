@@ -73,7 +73,10 @@ public class PlayerListener implements Listener {
                 return;
             }
             try {
-                bot.execute(MessageFactory.simpleMessage(chatId, LangConstants.TG_ADD_MESSAGE.getString().replaceAll("%player_name%", player.getName()), KeyboardFactory.addConfirmButtons(player.getUniqueId().toString(), chatId)));
+                bot.execute(MessageFactory.simpleMessage(chatId,
+                        LangConstants.TG_ADD_MESSAGE.getString()
+                                .replaceAll("%player_name%", player.getName()),
+                        KeyboardFactory.addConfirmButtons(player.getUniqueId().toString(), chatId)));
                 player.sendMessage(LangConstants.INGAME_WAIT_FOR_CONFIRM.getFormattedString());
             } catch (TelegramApiException e) {
                 e.printStackTrace();

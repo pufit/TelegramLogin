@@ -7,6 +7,9 @@ import it.ivirus.telegramlogin.database.SqlManager;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public abstract class ConnectionPoolManager extends SqlManager {
     @Getter
     @Setter
@@ -17,6 +20,11 @@ public abstract class ConnectionPoolManager extends SqlManager {
 
     public ConnectionPoolManager(TelegramLogin plugin) {
         super(plugin);
+        Logger.getLogger("com.zaxxer.hikari.pool.PoolBase").setLevel(Level.SEVERE);
+        Logger.getLogger("com.zaxxer.hikari.pool.HikariPool").setLevel(Level.SEVERE);
+        Logger.getLogger("com.zaxxer.hikari.HikariDataSource").setLevel(Level.SEVERE);
+        Logger.getLogger("com.zaxxer.hikari.HikariConfig").setLevel(Level.SEVERE);
+        Logger.getLogger("com.zaxxer.hikari.util.DriverDataSource").setLevel(Level.SEVERE);
         setupPool();
     }
 

@@ -13,19 +13,19 @@ import java.util.concurrent.CompletableFuture;
 public abstract class SqlManager {
     protected final TelegramLogin plugin;
     protected final String TABLE_PLAYERS = "Player";
-    @Getter
-    private Connection connection;
+    protected Connection connection;
 
     public SqlManager(TelegramLogin plugin) {
         this.plugin = plugin;
     }
 
-    public void setup() {
+    public void setup() throws SQLException {
         try {
-            if (getConnection() != null && !getConnection().isClosed()) {
+            if (connection != null && !connection.isClosed()) {
                 return;
             }
             setConnection(getJdbcUrl());
+            this.createTables();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -33,8 +33,11 @@ public abstract class SqlManager {
 
     public abstract void createTables() throws SQLException;
 
+    public abstract Connection getConnection() throws SQLException, ClassNotFoundException;
+
     public void addPlayerLogin(String playerUUID, String playerName, String chatId, Date registrationDate) {
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " + TABLE_PLAYERS + " (PlayerUUID, PlayerName, ChatID, Locked, RegistrationDate)" +
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO " + TABLE_PLAYERS + " (PlayerUUID, PlayerName, ChatID, Locked, RegistrationDate)" +
                 " values (?,?,?,?,?)")) {
             statement.setString(1, playerUUID);
             statement.setString(2, playerName);
@@ -42,22 +45,23 @@ public abstract class SqlManager {
             statement.setBoolean(4, false);
             statement.setDate(5, registrationDate);
             statement.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }
 
     public CompletableFuture<TelegramPlayer> getTelegramPlayer(String playerUUID) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_PLAYERS + " WHERE PlayerUUID=?")) {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_PLAYERS + " WHERE PlayerUUID=?")) {
                 statement.setString(1, playerUUID);
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
-                    return new TelegramPlayer(resultSet.getString("PlayerUUID"), resultSet.getString("ChatID"), resultSet.getBoolean("Locked"), resultSet.getDate("RegistrationDate"));
+                    return new TelegramPlayer(resultSet.getString("PlayerUUID"), resultSet.getString("ChatID"), resultSet.getBoolean("Locked"), resultSet.getDate("RegistrationDate"), resultSet.getInt("AccountId"));
                 } else {
                     return null;
                 }
-            } catch (SQLException ex) {
+            } catch (SQLException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
             return null;
@@ -66,16 +70,17 @@ public abstract class SqlManager {
 
     public CompletableFuture<TelegramPlayer> getTelegramPlayer(String chatId, int accountId) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_PLAYERS + " WHERE ChatID=? AND AccountId=?")) {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_PLAYERS + " WHERE ChatID=? AND AccountId=?")) {
                 statement.setString(1, chatId);
                 statement.setInt(2, accountId);
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
-                    return new TelegramPlayer(resultSet.getString("PlayerUUID"), resultSet.getString("ChatID"), resultSet.getBoolean("Locked"), resultSet.getDate("RegistrationDate"));
+                    return new TelegramPlayer(resultSet.getString("PlayerUUID"), resultSet.getString("ChatID"), resultSet.getBoolean("Locked"), resultSet.getDate("RegistrationDate"), resultSet.getInt("AccountId"));
                 } else {
                     return null;
                 }
-            } catch (SQLException ex) {
+            } catch (SQLException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
             return null;
@@ -84,7 +89,8 @@ public abstract class SqlManager {
 
     public CompletableFuture<List<TelegramPlayerInfo>> getTelegramPlayerInfoList(String chatId) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_PLAYERS + " WHERE ChatID=?")) {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_PLAYERS + " WHERE ChatID=?")) {
                 statement.setString(1, chatId);
                 ResultSet resultSet = statement.executeQuery();
                 List<TelegramPlayerInfo> telegramPlayerList = new ArrayList<>();
@@ -92,7 +98,7 @@ public abstract class SqlManager {
                     telegramPlayerList.add(new TelegramPlayerInfo(resultSet.getInt("AccountId"), resultSet.getString("PlayerName"),resultSet.getBoolean("Locked")));
                 }
                 return telegramPlayerList;
-            } catch (SQLException ex) {
+            } catch (SQLException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
             return null;
@@ -100,50 +106,55 @@ public abstract class SqlManager {
     }
 
     public void removePlayerLogin(String playerUUID) {
-        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " + TABLE_PLAYERS + " WHERE PlayerUUID=?")) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM " + TABLE_PLAYERS + " WHERE PlayerUUID=?")) {
             statement.setString(1, playerUUID);
             statement.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }
 
     public void setChatId(String playerUUID, String chatId) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_PLAYERS + " SET ChatId=? WHERE PlayerUUID=?")) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_PLAYERS + " SET ChatId=? WHERE PlayerUUID=?")) {
             statement.setString(1, chatId);
             statement.setString(2, playerUUID);
             statement.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }
 
     public void setLockPlayer(String playerUUID, boolean value) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_PLAYERS + " SET Locked=? WHERE PlayerUUID=?")) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_PLAYERS + " SET Locked=? WHERE PlayerUUID=?")) {
             statement.setBoolean(1, value);
             statement.setString(2, playerUUID);
             statement.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }
 
     public void setLockPlayer(int accountId, boolean value) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_PLAYERS + " SET Locked=? WHERE AccountId=?")) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_PLAYERS + " SET Locked=? WHERE AccountId=?")) {
             statement.setBoolean(1, value);
             statement.setInt(2, accountId);
             statement.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }
 
     public void setLockPlayerByChatId(String chatid, boolean value) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_PLAYERS + " SET Locked=? WHERE ChatId=?")) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_PLAYERS + " SET Locked=? WHERE ChatId=?")) {
             statement.setBoolean(1, value);
             statement.setString(2, chatid);
             statement.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }
