@@ -2,7 +2,6 @@ package it.ivirus.telegramlogin.util;
 
 import it.ivirus.telegramlogin.TelegramLogin;
 import lombok.Getter;
-import org.bukkit.configuration.file.FileConfiguration;
 
 public enum LangConstants {
 
@@ -38,6 +37,7 @@ public enum LangConstants {
     INGAME_ACCOUNT_LIST_LOCKED("info.in-game.account-list.locked"),
     INGAME_ACCOUNT_LIST_UNLOCKED("info.in-game.account-list.unlocked"),
     INGAME_ACCOUNT_LINKED("info.in-game.account-linked"),
+    INGAME_ACCOUNT_LIMIT_REACHED("errors.in-game.account-limit-reached"),
     INGAME_ADD_CHATID("info.in-game.add-chat-id"),
     INGAME_CHATID_CHANGED("info.in-game.chat-id-changed"),
     INGAME_TARGET_REMOVED("info.in-game.target-removed"),
@@ -48,6 +48,7 @@ public enum LangConstants {
     INGAME_WAIT_FOR_CONFIRM("info.in-game.wait-for-confirm"),
     INGAME_WAIT_FOR_LOGIN_CONFIRM("info.in-game.wait-for-login-confirm"),
     INGAME_INVALID_VALUE("errors.in-game.invalid-value"),
+    INGAME_INVALID_CHAT_ID("errors.in-game.invalid-chat-id"),
     INGAME_OPERATION_ABORTED("info.in-game.operation-aborted"),
     INGAME_ABORT_2FA("info.in-game.2FA.abort-2FA"),
     INGAME_ACCOUNT_DISCONNECTED("info.in-game.2FA.account-disconnected"),

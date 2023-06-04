@@ -2,8 +2,10 @@
 prefix: "&8(&bTelegram&fLogin&8)&r"
 errors:
   in-game:
+    account-limit-reached: "%prefix%&7 &cВы достигли лимита майнкрафт аккаунтов"
     no-permission: "%prefix%&7: &cВ разрешении отказано."
     invalid-value: "%prefix%&7: &cНедопустимое значение"
+    invalid-chat-id: "%prefix%&7: &cТелеграм вернул ошибку! Проверьте, что у вас есть диалог с ботом"
     only-player: "%prefix%&7: &cКоманда, выполняемая только игроком"
     target-without-telegramLogin:
       - "&cЭтого игрока не существует"

@@ -3,7 +3,7 @@ package it.ivirus.telegramlogin.telegram.callbackmanager.textcommand;
 import it.ivirus.telegramlogin.telegram.TelegramBot;
 import it.ivirus.telegramlogin.telegram.callbackmanager.AbstractUpdate;
 import it.ivirus.telegramlogin.util.*;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;

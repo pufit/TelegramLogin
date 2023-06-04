@@ -1,8 +1,10 @@
 prefix: "&8(&bTelegram&fLogin&8)&r"
 errors:
   in-game:
+    account-limit-reached: "%prefix%&7 &cYou reached the limit of Minecraft accounts"
     no-permission: "%prefix%&7: &cPermission denied."
     invalid-value: "%prefix%&7: &cInvalid value"
+    invalid-chat-id: "%prefix%&7: &cTelegram returned an error. Please check that you have a conversation with the bot"
     only-player: "%prefix%&7: &cCommand executable only by player"
     target-without-telegramLogin:
       - "&cThis player does not exists"

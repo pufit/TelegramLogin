@@ -6,7 +6,7 @@ import it.ivirus.telegramlogin.util.LangConstants;
 import it.ivirus.telegramlogin.util.MessageFactory;
 import it.ivirus.telegramlogin.util.PluginMessageAction;
 import it.ivirus.telegramlogin.util.Util;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 

@@ -1,4 +1,8 @@
 language: en_US
+
+# Limits max minecraft accounts for one telegram chat id. 0 = unlimited.
+max-accounts-count: 0
+
 #########################################################################
 #                       Database Config                                 #
 #########################################################################

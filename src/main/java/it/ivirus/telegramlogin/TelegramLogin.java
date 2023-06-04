@@ -34,6 +34,7 @@ public class TelegramLogin extends JavaPlugin {
     private FileConfiguration langConfig;
     private boolean bungeeEnabled = false;
     private boolean loginSessionEnabled = false;
+    private int maxAccountsCount = 0;
     private final Executor executor = runnable -> Bukkit.getScheduler().runTaskAsynchronously(this, runnable);
 
     @Override
@@ -53,6 +54,8 @@ public class TelegramLogin extends JavaPlugin {
         }
         if (this.getConfig().getBoolean("login-session"))
             this.loginSessionEnabled = true;
+
+        maxAccountsCount = this.getConfig().getInt("max-accounts-count");
 
         this.startBot();
         new Task(this).startClearCacheTask();

@@ -5,7 +5,7 @@ import it.ivirus.telegramlogin.TelegramLogin;
 import it.ivirus.telegramlogin.data.PlayerData;
 import it.ivirus.telegramlogin.telegram.TelegramBot;
 import it.ivirus.telegramlogin.util.*;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -72,15 +72,27 @@ public class PlayerListener implements Listener {
                 player.sendMessage(LangConstants.INGAME_INVALID_VALUE.getFormattedString());
                 return;
             }
-            try {
-                bot.execute(MessageFactory.simpleMessage(chatId,
-                        LangConstants.TG_ADD_MESSAGE.getString()
-                                .replaceAll("%player_name%", player.getName()),
-                        KeyboardFactory.addConfirmButtons(player.getUniqueId().toString(), chatId)));
-                player.sendMessage(LangConstants.INGAME_WAIT_FOR_CONFIRM.getFormattedString());
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+
+            plugin.getSql().getTelegramPlayersCount(chatId).whenComplete((count, throwable) -> {
+                if (throwable != null)
+                    throwable.printStackTrace();
+            }).thenAccept((count) -> {
+                if (plugin.getMaxAccountsCount() != 0 && count >= plugin.getMaxAccountsCount()) {
+                    player.sendMessage(LangConstants.INGAME_ACCOUNT_LIMIT_REACHED.getFormattedString());
+                    return;
+                }
+
+                try {
+                    bot.execute(MessageFactory.simpleMessage(chatId,
+                            LangConstants.TG_ADD_MESSAGE.getString()
+                                    .replaceAll("%player_name%", player.getName()),
+                            KeyboardFactory.addConfirmButtons(player.getUniqueId().toString(), chatId)));
+                    player.sendMessage(LangConstants.INGAME_WAIT_FOR_CONFIRM.getFormattedString());
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                    player.sendMessage(LangConstants.INGAME_INVALID_CHAT_ID.getFormattedString());
+                }
+            });
         }
     }
 

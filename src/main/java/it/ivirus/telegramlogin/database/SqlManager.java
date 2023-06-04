@@ -68,6 +68,24 @@ public abstract class SqlManager {
         }, plugin.getExecutor());
     }
 
+    public CompletableFuture<Integer> getTelegramPlayersCount(String chatId) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) as accounts_count FROM " + TABLE_PLAYERS + " WHERE chatID=?")) {
+                statement.setString(1, chatId);
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    return resultSet.getInt("accounts_count");
+                } else {
+                    return 0;
+                }
+            } catch (SQLException | ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+            return 0;
+        }, plugin.getExecutor());
+    }
+
     public CompletableFuture<TelegramPlayer> getTelegramPlayer(String chatId, int accountId) {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
